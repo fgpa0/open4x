@@ -1,1 +1,5 @@
+# Text files keep LF line endings on every platform (tests compare shader
+# sources, and the data files ship as they are).
+* text=auto eol=lf
+
 *.glb filter=lfs diff=lfs merge=lfs -text
