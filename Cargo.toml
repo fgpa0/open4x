@@ -1,0 +1,30 @@
+[workspace]
+resolver = "2"
+members = ["crates/sim", "crates/ai", "crates/client", "crates/headless"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "GPL-3.0-or-later"
+
+[workspace.dependencies]
+sim = { path = "crates/sim" }
+ai = { path = "crates/ai" }
+serde = { version = "1", features = ["derive"] }
+ron = "0.12"
+rayon = "1.12"
+noise = "0.9"
+rand = "0.8"
+rand_chacha = "0.3"
+
+# Bevy systems take many parameters with long query types by design.
+[workspace.lints.clippy]
+too_many_arguments = "allow"
+type_complexity = "allow"
+
+# Bevy is slow in debug; optimise dependencies even in dev builds.
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.dev]
+opt-level = 1

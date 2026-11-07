@@ -1,0 +1,64 @@
+// Experience (see `experience.rs`). Military units earn XP in battle and rise
+// through `ranks` on their own, each rank giving its strength bonus (percent,
+// attacking and defending) and extra healing per turn; a unit keeps its XP
+// when it's upgraded, and stops earning at the last rank.
+//
+// Generals lead their owner's land units within the `aura`'s `range` (tiles),
+// and Admirals the ships: those units get `strength` percent and the
+// leader's traits. Leaders earn XP from every fight of a unit they lead. Each
+// of `general_levels` (XP needed for that level) lets them choose one of the
+// `traits`. A trait is taken once; one with a `domain` is only for Generals
+// (Land) or Admirals (Sea). New traits go at the end (saves store their
+// positions). A choice not made by the end of the turn is made for it: the
+// first trait in this list it doesn't have yet, so the list is in order of
+// general use.
+//
+// Trait effects: `Moves(n)` extra movement for every unit led, `Sight(n)`
+// extra sight, `Combat(percent:, when:)` a combat bonus under a condition (as
+// in civs.ron, plus `Defending`), `Heal(n)` extra healing per turn outside
+// cities, `Experience(percent)` more XP for the units led.
+(
+    gain: (
+        // Each member that strikes a melee blow, or shoots.
+        melee: 5,
+        ranged: 3,
+        // Each member that is hit while defending and lives.
+        defend: 4,
+        // Extra for every striker when the enemy loses a unit, or the city falls.
+        kill: 2,
+        capture: 5,
+        // A General, for each fight of a unit it leads (plus the kill and capture bonus).
+        general: 4,
+    ),
+    ranks: [
+        (name: "Veteran", xp: 12, strength: 10, heal: 0),
+        (name: "Elite", xp: 35, strength: 20, heal: 5),
+        (name: "Legendary", xp: 75, strength: 30, heal: 10),
+    ],
+    general_levels: [10, 25, 45, 70, 100],
+    aura: (range: 2, strength: 10),
+    traits: [
+        (id: "forced_march", domain: Some(Land), name: "Forced March", effect: Moves(1),
+         description: "+1 movement for the units it leads."),
+        (id: "steadfast", name: "Steadfast", effect: Combat(percent: 15, when: Defending),
+         description: "+15% strength when defending."),
+        (id: "siegecraft", name: "Siegecraft", effect: Combat(percent: 25, when: AttackingCities),
+         description: "+25% strength attacking cities."),
+        (id: "aggressor", name: "Aggressor", effect: Combat(percent: 15, when: AttackingUnits),
+         description: "+15% strength attacking units."),
+        (id: "outriders", domain: Some(Land), name: "Outriders", effect: Sight(1),
+         description: "+1 sight for the units it leads."),
+        (id: "field_surgeons", domain: Some(Land), name: "Field Surgeons", effect: Heal(10),
+         description: "Heals 10 more hit points a turn outside cities."),
+        (id: "drillmaster", name: "Drillmaster", effect: Experience(50),
+         description: "The units it leads earn 50% more experience."),
+        (id: "pitched_battle", domain: Some(Land), name: "Pitched Battle", effect: Combat(percent: 15, when: OpenGround),
+         description: "+15% strength on open ground."),
+        (id: "fair_winds", domain: Some(Sea), name: "Fair Winds", effect: Moves(1),
+         description: "+1 movement for the ships it leads."),
+        (id: "lookouts", domain: Some(Sea), name: "Lookouts", effect: Sight(1),
+         description: "+1 sight for the ships it leads."),
+        (id: "ships_carpenters", domain: Some(Sea), name: "Ship's Carpenters", effect: Heal(10),
+         description: "Repairs 10 more hit points a turn in home waters outside harbours."),
+    ],
+)

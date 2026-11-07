@@ -1,0 +1,36 @@
+// Terrain rules. Yields are per worked tile per turn.
+// `art` picks the client's ground texture for the terrain. `deep` water
+// (open ocean) needs a technology to cross (see `grants` in techs.ron).
+// Workers clear features with `clear_turns` when building an improvement on
+// them, and the nearest city gets `clear_production`.
+(
+    terrains: [
+        (id: "ocean",     name: "Ocean",     food: 1, production: 0, gold: 1, move_cost: 1, defense: 0,  water: true,  art: "ocean", deep: true),
+        (id: "coast",     name: "Coast",     food: 1, production: 0, gold: 2, move_cost: 1, defense: 0,  water: true,  art: "coast"),
+        (id: "lake",      name: "Lake",      food: 2, production: 0, gold: 1, move_cost: 1, defense: 0,  water: true,  art: "lake"),
+        (id: "grassland", name: "Grassland", food: 2, production: 0, gold: 0, move_cost: 1, defense: 0,  water: false, art: "grassland"),
+        (id: "plains",    name: "Plains",    food: 1, production: 1, gold: 0, move_cost: 1, defense: 0,  water: false, art: "plains"),
+        (id: "desert",    name: "Desert",    food: 0, production: 0, gold: 0, move_cost: 1, defense: 0,  water: false, art: "desert"),
+        (id: "tundra",    name: "Tundra",    food: 1, production: 0, gold: 0, move_cost: 1, defense: 0,  water: false, art: "tundra"),
+        (id: "snow",      name: "Snow",      food: 0, production: 0, gold: 0, move_cost: 1, defense: 0,  water: false, art: "snow"),
+    ],
+    // Elevation modifiers are added on top of the base terrain.
+    hills:     (food: -1, production: 2, gold: 0, move_cost: 1, defense: 25),
+    mountains: (food: 0,  production: 0, gold: 0, move_cost: 0, defense: 0, impassable: true),
+    features: [
+        (id: "forest", name: "Forest", food: 0,  production: 1, gold: 0, move_cost: 1, defense: 25, art: "forest",
+         allowed_on: ["grassland", "plains", "tundra"], clear_turns: 3, clear_production: 20),
+        (id: "jungle", name: "Jungle", food: 1,  production: -1, gold: 0, move_cost: 1, defense: 25, art: "jungle",
+         allowed_on: ["grassland", "plains"], clear_turns: 4, clear_production: 10),
+        (id: "marsh",  name: "Marsh",  food: 0,  production: -1, gold: 0, move_cost: 1, defense: -15, art: "marsh",
+         allowed_on: ["grassland"], clear_turns: 5),
+        (id: "oasis",  name: "Oasis",  food: 3,  production: 0, gold: 1, move_cost: 0, defense: 0, art: "oasis",
+         allowed_on: ["desert"]),
+    ],
+    // Fresh water from a river next to the tile.
+    river: (food: 0, production: 0, gold: 1, move_cost: 0, defense: 25),
+    // Ice on water comes and goes with the seasons (see climate.rs): below
+    // `thin_below` °C ships and embarked units cross it slowly, below
+    // `pack_below` nothing can.
+    sea_ice: (thin_below: -2.0, pack_below: -14.0, thin_move_cost: 2),
+)

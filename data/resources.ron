@@ -1,0 +1,77 @@
+// Map resources. A resource's yields count for a player once they know its
+// `tech` (none: everyone sees it); building its `improvement` on it adds the
+// improvement's yields and connects it (Fishing Boats for those on water).
+//
+// - Bonus: just better tiles.
+// - Luxury: each different luxury a player has (connected, or received in a
+//   deal) adds `luxury_gold` gold in every one of their cities. They can be
+//   traded.
+// - Strategic: needed to train some units (`resource:` in units.ron). They
+//   can be traded too.
+//
+// Placement: on the listed `terrains` (empty: any land), with one of the
+// `features` (empty: no feature), at one of the `elevations`, within the
+// `temperature` range (°C, mean annual). Bonus and strategic resources go on
+// `abundance` percent of the matching tiles; luxuries come in clusters of 2 to
+// 4 tiles, `abundance` clusters per 1000 land tiles.
+(
+    luxury_gold: 1,
+    resources: [
+        // Bonus.
+        (id: "wheat", name: "Wheat", kind: Bonus, food: 1, improvement: Some("farm"),
+         terrains: ["plains"], abundance: 6),
+        (id: "cattle", name: "Cattle", kind: Bonus, food: 1, improvement: Some("pasture"),
+         terrains: ["grassland"], abundance: 5),
+        (id: "sheep", name: "Sheep", kind: Bonus, food: 1, improvement: Some("pasture"),
+         terrains: ["grassland", "plains", "tundra", "desert"], elevations: [Hills], abundance: 8),
+        (id: "deer", name: "Deer", kind: Bonus, food: 1, improvement: Some("camp"),
+         terrains: ["grassland", "plains", "tundra"], features: ["forest"], elevations: [Flat, Hills],
+         temperature: Some((-20.0, 14.0)), abundance: 5),
+        (id: "bananas", name: "Bananas", kind: Bonus, food: 1, improvement: Some("plantation"),
+         features: ["jungle"], abundance: 6),
+        (id: "stone", name: "Stone", kind: Bonus, production: 1, improvement: Some("quarry"),
+         terrains: ["grassland", "plains", "desert", "tundra"], elevations: [Flat, Hills], abundance: 3),
+        (id: "fish", name: "Fish", kind: Bonus, food: 1, improvement: Some("fishing_boats"), terrains: ["coast", "lake"], abundance: 6),
+
+        // Luxury.
+        (id: "wine", name: "Wine", kind: Luxury, gold: 1, improvement: Some("plantation"),
+         terrains: ["grassland", "plains"], elevations: [Flat, Hills], temperature: Some((10.0, 24.0)), abundance: 3),
+        (id: "silk", name: "Silk", kind: Luxury, gold: 1, improvement: Some("plantation"),
+         terrains: ["grassland", "plains"], features: ["forest"], temperature: Some((8.0, 30.0)), abundance: 3),
+        (id: "spices", name: "Spices", kind: Luxury, food: 1, gold: 1, improvement: Some("plantation"),
+         features: ["jungle"], abundance: 3),
+        (id: "incense", name: "Incense", kind: Luxury, gold: 1, improvement: Some("plantation"),
+         terrains: ["desert", "plains"], temperature: Some((16.0, 40.0)), abundance: 3),
+        (id: "furs", name: "Furs", kind: Luxury, gold: 1, improvement: Some("camp"),
+         terrains: ["tundra", "plains", "grassland"], features: ["forest"], elevations: [Flat, Hills],
+         temperature: Some((-30.0, 6.0)), abundance: 3),
+        (id: "ivory", name: "Ivory", kind: Luxury, production: 1, gold: 1, improvement: Some("camp"),
+         terrains: ["plains", "grassland"], temperature: Some((18.0, 40.0)), abundance: 2),
+        (id: "gems", name: "Gems", kind: Luxury, gold: 2, improvement: Some("mine"),
+         terrains: ["grassland", "plains", "desert", "tundra"], features: ["jungle"], elevations: [Flat, Hills], abundance: 2),
+        (id: "gold", name: "Gold Ore", kind: Luxury, gold: 2, improvement: Some("mine"),
+         terrains: ["desert", "plains", "grassland"], elevations: [Hills], abundance: 3),
+        (id: "salt", name: "Salt", kind: Luxury, food: 1, gold: 1, improvement: Some("mine"),
+         terrains: ["desert", "plains", "tundra"], abundance: 2),
+        (id: "marble", name: "Marble", kind: Luxury, gold: 1, improvement: Some("quarry"),
+         terrains: ["grassland", "plains", "desert"], elevations: [Flat, Hills], abundance: 2),
+        (id: "pearls", name: "Pearls", kind: Luxury, gold: 2, improvement: Some("fishing_boats"), terrains: ["coast"],
+         temperature: Some((14.0, 40.0)), abundance: 2),
+
+        // Strategic.
+        (id: "horses", name: "Horses", kind: Strategic, production: 1, improvement: Some("pasture"),
+         tech: Some("animal_husbandry"), terrains: ["grassland", "plains"], abundance: 3),
+        (id: "iron", name: "Iron", kind: Strategic, production: 1, improvement: Some("mine"),
+         tech: Some("bronze_working"), terrains: ["grassland", "plains", "desert", "tundra"],
+         elevations: [Flat, Hills], abundance: 2),
+        (id: "niter", name: "Niter", kind: Strategic, production: 1, improvement: Some("mine"),
+         tech: Some("physics"), terrains: ["desert", "plains", "grassland", "tundra"],
+         elevations: [Flat, Hills], abundance: 2),
+        (id: "coal", name: "Coal", kind: Strategic, production: 2, improvement: Some("mine"),
+         tech: Some("industrialization"), terrains: ["plains", "grassland", "tundra"],
+         elevations: [Hills], abundance: 4),
+        (id: "oil", name: "Oil", kind: Strategic, production: 2, improvement: Some("oil_well"),
+         tech: Some("combustion"), terrains: ["desert", "tundra", "plains", "snow"],
+         elevations: [Flat], abundance: 3),
+    ],
+)

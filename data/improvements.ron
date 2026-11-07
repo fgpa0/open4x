@@ -1,0 +1,67 @@
+// Tile improvements, built by Workers inside their owner's borders. `turns` is
+// how long a Worker takes; yields are added to the tile. An improvement goes
+// on land of the listed `terrains` (empty: any) and `elevations`, or on any
+// tile with a resource it improves (see `improvement:` in resources.ron).
+// `resource_only` ones are built on their resources and nowhere else.
+// Building on a forest, jungle or marsh clears it first (`clear_turns` in
+// terrain.ron), unless the tile's resource needs the feature (a Camp on Deer
+// in a forest keeps its trees). Improvements with `features` go only on
+// tiles with one of them, and keep it. `water` ones go on water (a Worker
+// builds them embarked).
+(
+    improvements: [
+        (id: "farm", name: "Farm", turns: 5, food: 1, art: "farm",
+         terrains: ["grassland", "plains", "tundra"], elevations: [Flat, Hills],
+         description: "Fields and irrigation ditches: +1 food."),
+        (id: "mine", name: "Mine", turns: 6, production: 1, art: "mine", tech: Some("mining"),
+         elevations: [Hills],
+         description: "Shafts into the hills: +1 production."),
+        (id: "pasture", name: "Pasture", turns: 5, production: 1, art: "pasture", tech: Some("animal_husbandry"),
+         resource_only: true,
+         description: "Fenced grazing for horses, cattle and sheep."),
+        (id: "camp", name: "Camp", turns: 5, gold: 1, art: "camp", tech: Some("animal_husbandry"),
+         resource_only: true,
+         description: "A hunters' camp for deer, furs and ivory."),
+        (id: "plantation", name: "Plantation", turns: 5, gold: 1, art: "plantation", tech: Some("calendar"),
+         resource_only: true,
+         description: "Orchards and rows of crops: wine, silk, spices and more."),
+        (id: "quarry", name: "Quarry", turns: 6, production: 1, art: "quarry", tech: Some("masonry"),
+         resource_only: true,
+         description: "Cut stone and marble."),
+        (id: "lumber_mill", name: "Lumber Mill", turns: 6, production: 1, art: "lumber_mill", tech: Some("machinery"),
+         features: ["forest"],
+         description: "A sawmill in the woods: +1 production, and the trees stay."),
+        (id: "fishing_boats", name: "Fishing Boats", turns: 4, food: 1, art: "fishing_boats", tech: Some("sailing"),
+         resource_only: true, water: true,
+         description: "Boats, nets and fish traps on a fishing ground or pearl bed: +1 food. Built by an embarked Worker."),
+        (id: "oil_well", name: "Oil Well", turns: 6, production: 1, art: "oil_well", tech: Some("combustion"),
+         resource_only: true,
+         description: "A derrick and a nodding pumpjack: +1 production, and connects the oil."),
+    ],
+    // Roads can also be built outside anyone's borders. Moving from one road
+    // tile (or city) to another costs 1, whatever the terrain.
+    road: (turns: 3),
+    // Railways are laid over roads (also outside anyone's borders) once the
+    // Worker's owner knows `tech`. A step from one railway tile to another
+    // costs a fifth of a move; cities have one once their owner knows how.
+    railroad: (turns: 4, tech: "railroad"),
+    // Passages are city builds, placed on a tile of the city's own land and
+    // paid for in production (`cost`). A tunnel goes through a mountain: land
+    // units cross it like a road. A canal digs out a tile of flat land next to
+    // water (or next to a canal being dug) and turns it into `becomes` for
+    // good: chained, canals make channels and harbours of any size. A bridge spans shallow water between two separate stretches
+    // of land (an existing bridge counts as land) and carries a road: land
+    // units walk over it without embarking, and ships still sail under it.
+    // Everyone may use all three, wherever their borders let them go.
+    tunnel: (cost: 150, tech: "engineering"),
+    canal: (cost: 70, tech: "construction", becomes: Some("coast")),
+    bridge: (cost: 100, tech: "construction"),
+    // Border posts, built by a city on its owner's land up to `reach` tiles
+    // away (see `combat.rs`). A fort adds `defense` percent to units
+    // defending in it and fires at one enemy within a tile each turn, at
+    // `strike` percent of a city's strength. A watchtower sees `sight` tiles
+    // all round. An enemy unit standing on either at the end of a turn
+    // pulls it down.
+    fort: (cost: 60, tech: "masonry", reach: 5, defense: 50, strike: 70, sight: 2),
+    watchtower: (cost: 35, tech: "archery", reach: 5, sight: 4),
+)

@@ -1,0 +1,10 @@
+/target
+__pycache__/
+
+# Screenshots and profiling output from dev runs.
+*.png
+!data/**/*.png
+trace-*.json
+
+# Local notes, not part of the repository.
+/ROADMAP.md

@@ -1,0 +1,12 @@
+[package]
+name = "headless"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+sim.workspace = true
+ai.workspace = true
