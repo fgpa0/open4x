@@ -13,7 +13,7 @@ Ten civilizations, six eras (Ancient to Modern) and several map types: Continent
 
 ## Playing
 
-Download the latest build for Linux, Windows or macOS from the [Releases](../../releases) page, unpack it and run `open4x` (`open4x.exe` on Windows). Keep the `data` folder next to the executable.
+Download the latest build for Linux, Windows or macOS (Apple Silicon) from the [Releases](https://github.com/fgpa0/open4x/releases) page, unpack it and run `open4x` (`open4x.exe` on Windows). Keep the `data` folder next to the executable.
 
 The builds aren't signed. On Windows, if SmartScreen warns you, choose *More info → Run anyway*. On macOS, clear the quarantine flag once with `xattr -d com.apple.quarantine open4x`.
 
@@ -24,7 +24,7 @@ Saves go to `~/.local/share/open4x/saves` on Linux, `%APPDATA%\open4x\saves` on 
 You need a [Rust toolchain](https://rustup.rs) and [Git LFS](https://git-lfs.com). The 3D models are stored in LFS, so run `git lfs install` before cloning.
 
 ```sh
-git clone <repository url>
+git clone https://github.com/fgpa0/open4x.git
 cd open4x
 cargo run --release -p client
 ```
